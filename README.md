@@ -19,7 +19,7 @@ pip install -r requirements.txt
 
 trained model can download from [Baidu](https://pan.baidu.com/s/1Y8i14TE4DiST-YTUi4eueA)
 
-complete code in  [Infer](infer.py)
+complete code in  [Infer](infer.ipynb)
 
 ## How To Train
 
