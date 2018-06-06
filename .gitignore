@@ -1,0 +1,5 @@
+# Created by .ignore support plugin (hsz.mobi)
+### IPythonNotebook template
+# Temporary data
+.ipynb_checkpoints/
+logs
