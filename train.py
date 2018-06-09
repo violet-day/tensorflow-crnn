@@ -11,11 +11,11 @@ from model import foward, create_train_op
 from provider import get_input
 
 
-def main(args):
+def main(_):
     tf.logging.set_verbosity(tf.logging.INFO)
 
     images, image_widths, labels = get_input()
-    seq_len_inputs = tf.divide(image_widths, pool_size, name='seq_len_input_op')
+    seq_len_inputs = tf.divide(image_widths, pool_size, name='seq_len_input_op') - 1
 
     logprob = foward(images, is_training=True)
     train_op = create_train_op(labels, seq_len_inputs, logprob)

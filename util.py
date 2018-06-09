@@ -6,7 +6,7 @@ from tensorflow.python.platform import flags
 
 seed = np.random.RandomState(int(round(time.time())))
 
-pool_size = 16
+pool_size = 2 * 2
 
 
 def define_flags():
