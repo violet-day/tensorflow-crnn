@@ -30,15 +30,5 @@ common args define in `util.py`
 
 ## Metrics
 
-### CTC Loss
-![CTC Loss](resource/ctc_loss.jpg)
-
-### Edit Distance
-
-![Edit Distance](resource/cer.jpg)
-
-### Sequence Accuracy
-
-![Sequence Accuracy](resource/seq_acc.jpg)
-
+![Sequence Accuracy](resource/metrics.jpg)
 
