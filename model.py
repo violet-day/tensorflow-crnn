@@ -8,36 +8,33 @@ from tensorflow.contrib import slim
 from tensorflow.contrib.rnn import BasicLSTMCell
 
 
-def vgg_a(inputs,
-          scope='vgg_a', is_training=True):
+def vgg_net(inputs,
+        scope='vgg', is_training=True):
     batch_norm_params = {
         'is_training': is_training
     }
     with tf.variable_scope(scope):
         with slim.arg_scope([slim.conv2d], normalizer_fn=slim.batch_norm, normalizer_params=batch_norm_params):
-            with slim.arg_scope([slim.batch_norm], **batch_norm_params):
-                net = slim.repeat(
-                    inputs, 1, slim.conv2d, 64, [3, 3], scope='conv1')
-                net = slim.max_pool2d(net, [2, 2], scope='pool1')
-                net = slim.repeat(net, 1, slim.conv2d, 128, [3, 3], scope='conv2')
-                net = slim.max_pool2d(net, [2, 2], scope='pool2')
-                net = slim.repeat(net, 2, slim.conv2d, 256, [3, 3], scope='conv3')
-                net = slim.max_pool2d(net, [2, 2], scope='pool3')
-                net = slim.repeat(net, 2, slim.conv2d, 512, [3, 3], scope='conv4')
-                net = slim.max_pool2d(net, [2, 2], scope='pool4')
-                net = slim.repeat(net, 1, slim.conv2d, 512, [3, 3], scope='conv5')
-                return net
+            with slim.arg_scope([slim.max_pool2d], padding='SAME'):
+                with slim.arg_scope([slim.batch_norm], **batch_norm_params):
+                    net = slim.repeat(
+                        inputs, 1, slim.conv2d, 64, [3, 3], scope='conv1')
+                    net = slim.max_pool2d(net, [2, 2], scope='pool1')
+                    net = slim.repeat(net, 1, slim.conv2d, 128, [3, 3], scope='conv2')
+                    net = slim.max_pool2d(net, [2, 2], scope='pool2')
+                    net = slim.repeat(net, 2, slim.conv2d, 256, [3, 3], scope='conv3')
+                    net = slim.max_pool2d(net, [2, 2], stride=[2, 1], scope='pool3')
+                    net = slim.repeat(net, 2, slim.conv2d, 512, [3, 3], scope='conv4')
+                    net = slim.max_pool2d(net, [2, 2], stride=[2, 1], scope='pool4')
+                    net = slim.repeat(net, 1, slim.conv2d, 512, [3, 3], scope='conv5')
+                    return net
 
 
 def foward(images, is_training=True):
     tf.summary.image('tf-crnn/images', images)
     dropout_keep_prob = 0.7 if is_training else 1.0
-
-    # with slim.arg_scope(vgg.vgg_arg_scope()):
-    cnn_net = vgg_a(images, is_training=is_training)
+    cnn_net = vgg_net(images, is_training=is_training)
     logging.info('cnn_net shape: %s' % cnn_net.get_shape())
-
-    # cnn_net = deep_cnn(images, is_training, False)
 
     with tf.variable_scope('Reshaping_cnn'):
         shape = cnn_net.get_shape().as_list()  # [batch, height, width, features]
